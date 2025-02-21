@@ -12,10 +12,13 @@ backup_file = f'usb.{datetime.strftime(datetime.today(), "%Y-%m-%d")}.tar.gz'
 backup_path = f'{backup_dir}/{backup_file}'
 
 cmd_mount = ['sudo', '-S', 'mount', '-U', '01DB2557286B1350', '/mnt/store', '-o', 'uid=1000,gid=1000']
-cmd_arch = ['tar',
+cmd_arch = [
+    'tar',
    '-czvf', backup_path,
-    '-g', backup_dir + '/usb.snar',
-    '-X', backup_dir + '/.backupignore', source_path]
+    '-g', f'{backup_dir}/usb.snar',
+    '-X', f'{backup_dir}/.backupignore',
+    source_path
+]
 
 if not os.path.ismount(mount_point):
     password = getpass("Enter your password: ")
