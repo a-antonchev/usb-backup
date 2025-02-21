@@ -31,16 +31,16 @@ if not os.path.ismount(mount_point):
             check=True)
     except subprocess.CalledProcessError as err:
         print(err.__str__())
+else:
+    if os.path.exists(f'{backup_path}'):
+        print(f'Архив {backup_file} уже существует')
     else:
-        if os.path.exists(f'{backup_path}'):
-            print(f'Архив {backup_file} уже существует')
-        else:
-            print(f'Создаем архив {backup_path}/{backup_file}')
-            try:
-                proc = subprocess.run(
-                    cmd_arch,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    check=True)
-            except subprocess.CalledProcessError as err:
-                print(err.__str__())
+        print(f'Создаем архив {backup_path}/{backup_file}')
+        try:
+            proc = subprocess.run(
+                cmd_arch,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=True)
+        except subprocess.CalledProcessError as err:
+            print(err.__str__())
