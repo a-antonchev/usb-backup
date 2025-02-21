@@ -8,10 +8,14 @@ function write_log() {
   echo -e "$1" | tee -a $BACKUP_PATH/$LOG_FILE
 }
 
-SOURCE_PATH=/path/to/usb-drive
+# Directory of source files for archiving, '/' at the end, it is mandatory
+SOURCE_PATH=/path/to/usb-drive/
+# The mounting point of the disk on which the archive will be located
 MOUNT_POINT=/path/to/mount/point
-BACKUP_PATH=$MOUNT_POINT/path/to/dir/backup # The path to the backup directory at the mount point
-BACKUP_FILE=usb.$(date +%Y-%m-%d).tar.gz    # Creating a file name for the current date
+# The path to the backup directory at the mount point
+BACKUP_PATH=$MOUNT_POINT/path/to/dir/backup
+# Creating a file name for the current date
+BACKUP_FILE=usb.$(date +%Y-%m-%d).tar.gz
 LOG_FILE=archive.log
 UUID=01DB2557286B1350 # UUID backup disk (for mount command)
 
@@ -34,7 +38,7 @@ write_log "Creating archive $BACKUP_FILE"
 
 # Run tar and check result code
 if tar -czvf $BACKUP_PATH/"$BACKUP_FILE" -g $BACKUP_PATH/usb.snar \
-  -X $BACKUP_PATH/.backupignore $SOURCE_PATH/* 2>>$BACKUP_PATH/$LOG_FILE; then
+  -X $BACKUP_PATH/.backupignore $SOURCE_PATH 2>>$BACKUP_PATH/$LOG_FILE; then
   write_log "Create arhive success"
 else
   write_log "Error during create archive"
