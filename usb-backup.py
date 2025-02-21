@@ -1,25 +1,21 @@
-#!/home/antonchev/opt/miniconda3/envs/common/bin/python3
+#!/usr/bin/env python3
 
-# прикрутить архивы
-# прикрутить logging
-
-import os
 import os.path
 from datetime import datetime
 from getpass import getpass
 import subprocess
 
-MOUNT_POINT = '/mnt/store'
-PATH_SOURCE = '/media/antonchev/USB-накопитель'
-PATH_BACKUP = MOUNT_POINT + '/Backup'
-FILE_BACKUP = f'usb.{datetime.strftime(datetime.today(), "%Y-%m-%d")}.tar.gz'
+source_path = '/media/antonchev/USB-накопитель'
+mount_point = '/mnt/store'
+backup_path = mount_point + '/Backup'
+backup_file = f'usb.{datetime.strftime(datetime.today(), "%Y-%m-%d")}.tar.gz'
 cmd_mount = ['sudo', '-S', 'mount', '-U', '01DB2557286B1350', '/mnt/store', '-o', 'uid=1000,gid=1000']
 cmd_arch = ['tar',
-   '-czvf', PATH_BACKUP + '/' + FILE_BACKUP,
-    '-g', PATH_BACKUP + '/usb.snar',
-    '-X', PATH_BACKUP + '/.backupignore', PATH_SOURCE + '/*']
+   '-czvf', backup_path + '/' + backup_file,
+    '-g', backup_path + '/usb.snar',
+    '-X', backup_path + '/.backupignore', source_path + '/*']
 
-if not os.path.ismount(MOUNT_POINT):
+if not os.path.ismount(mount_point):
     password = getpass("Enter your password: ")
     try:
         proc = subprocess.run(
@@ -31,10 +27,10 @@ if not os.path.ismount(MOUNT_POINT):
     except subprocess.CalledProcessError as err:
         print(err.__str__())
     else:
-        if os.path.exists(f'{PATH_BACKUP}/{FILE_BACKUP}'):
-            print(f'Архив {FILE_BACKUP} уже существует')
+        if os.path.exists(f'{backup_path}/{backup_file}'):
+            print(f'Архив {backup_file} уже существует')
         else:
-            print(f'Создаем архив {PATH_BACKUP}/{FILE_BACKUP}')
+            print(f'Создаем архив {backup_path}/{backup_file}')
             try:
                 proc = subprocess.run(
                     cmd_arch,
