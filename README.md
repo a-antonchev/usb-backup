@@ -8,3 +8,6 @@ Only standard libraries are used for the python script, but just in case, the fi
 are posted:
 - requirements.txt (to create an environment on pip)
 - requirements.yml (for conda)
+
+> Reservation: the python script uses CLI commands,
+> so it cannot be considered a true native 'python-script')
