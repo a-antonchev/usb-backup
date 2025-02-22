@@ -21,6 +21,7 @@ cmd_arch = [
 ]
 
 if not os.path.ismount(mount_point):
+    print(f'Mount {backup_dir}')
     password = getpass("Enter your password: ")
     try:
         proc = subprocess.run(
