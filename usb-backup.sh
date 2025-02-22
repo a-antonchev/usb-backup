@@ -40,14 +40,19 @@ cp $BACKUP_PATH/usb.snar $BACKUP_PATH/usb.snar.save
 
 write_log "Creating archive $BACKUP_FILE"
 
+# Due to the fact that the 'tar' command, if executed unsuccessfully, creates
+# an archive anyway and makes changes to the incremental updates file 'usb.snar',
+# we create a copy of 'usb.snap.save'
+cp $BACKUP_PATH/usb.snar $BACKUP_PATH/usb.snar.save
+
 # Run tar and check result code
 if tar -czvf $BACKUP_PATH/"$BACKUP_FILE" -g $BACKUP_PATH/usb.snar \
   -X $BACKUP_PATH/.backupignore $SOURCE_PATH 2>>$BACKUP_PATH/$LOG_FILE; then
   write_log "Create arhive success"
-  rm $BACKUP_PATH/usb.snar.save
+  rm $BACKUP_PATH/usb.snar.save # Success - remove 'usb.snap.save'
 else
   write_log "Error during create archive"
-  mv $BACKUP_PATH/usb.snar.save $BACKUP_PATH/usb.snar
-  rm $BACKUP_PATH/"$BACKUP_FILE"
+  mv $BACKUP_PATH/usb.snar.save $BACKUP_PATH/usb.snar # Error - rollback 'usb.snap.save'
+  rm $BACKUP_PATH/"$BACKUP_FILE" # Error - remove bad archive
   exit 3
 fi
