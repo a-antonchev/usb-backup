@@ -30,6 +30,7 @@ fi
 
 # Log entry datetime identifier
 write_log "\n*** $(date +%Y-%m-%d' '%H:%S) ***\n"
+cp $BACKUP_PATH/usb.snar $BACKUP_PATH/usb.snar.save
 
 # If the archive for the current date exists,
 # then write to the log and exit with the code 2
@@ -43,7 +44,10 @@ write_log "Creating archive $BACKUP_FILE"
 if tar -czvf $BACKUP_PATH/"$BACKUP_FILE" -g $BACKUP_PATH/usb.snar \
   -X $BACKUP_PATH/.backupignore $SOURCE_PATH 2>>$BACKUP_PATH/$LOG_FILE; then
   write_log "Create arhive success"
+  rm $BACKUP_PATH/usb.snar.save
 else
   write_log "Error during create archive"
+  mv $BACKUP_PATH/usb.snar.save $BACKUP_PATH/usb.snar
+  rm $BACKUP_PATH/"$BACKUP_FILE"
   exit 3
 fi
