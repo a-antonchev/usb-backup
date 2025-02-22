@@ -48,7 +48,7 @@ if os.path.exists(f'{backup_path}'):
     logger.info(f'File {backup_file} already exists in directory, skip.')
     raise SystemExit(2)
 else:
-    logger.info(f'Creating archive {backup_path}/{backup_file}.')
+    logger.info(f'Creating archive {backup_file}')
     try:
         proc = subprocess.run(
             cmd_arch,
@@ -56,5 +56,8 @@ else:
             stderr=subprocess.PIPE,
             check=True)
     except subprocess.CalledProcessError as err:
+        logger.info('Error during create archive')
         logger.info(err.__str__())
         raise SystemExit(3)
+    else:
+        logger.info('Create arhive success')
