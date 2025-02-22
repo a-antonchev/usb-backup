@@ -22,7 +22,10 @@ UUID=01DB2557286B1350 # UUID backup disk (for mount command)
 # Mount if there is no mounting path
 if [[ ! -e $BACKUP_PATH ]]; then
   echo "Mount $BACKUP_PATH"
-  sudo mount -U $UUID $MOUNT_POINT -o uid=1000,gid=1000
+  if ! sudo mount -U $UUID $MOUNT_POINT -o uid=1000,gid=1000; then
+    echo "Error mount $BACKUP_PATH"
+    exit 1
+  fi
 fi
 
 # Log entry datetime identifier
@@ -42,4 +45,5 @@ if tar -czvf $BACKUP_PATH/"$BACKUP_FILE" -g $BACKUP_PATH/usb.snar \
   write_log "Create arhive success"
 else
   write_log "Error during create archive"
+  exit 3
 fi
