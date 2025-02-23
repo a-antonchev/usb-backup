@@ -5,6 +5,7 @@ from datetime import datetime
 from getpass import getpass
 import subprocess
 import logging
+import shutil
 
 source_path = '/path/to/usb-drive/'
 mount_point = '/path/to/mount/point'
@@ -49,6 +50,7 @@ if os.path.exists(f'{backup_path}'):
     raise SystemExit(2)
 else:
     logger.info(f'Creating archive {backup_file}')
+    shutil.copy(f'{backup_dir}/usb.snar', f'{backup_dir}/usb.snar.save')
     try:
         proc = subprocess.run(
             cmd_arch,
@@ -58,6 +60,9 @@ else:
     except subprocess.CalledProcessError as err:
         logger.info('Error during create archive')
         logger.info(err.__str__())
+        shutil.move(f'{backup_dir}/usb.snar.save', f'{backup_dir}/usb.snar')
+        os.remove(backup_path)        
         raise SystemExit(3)
     else:
         logger.info('Create arhive success')
+        os.remove(f'{backup_dir}/usb.snar.save')
