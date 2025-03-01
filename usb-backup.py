@@ -22,15 +22,10 @@ backup_file = f'usb.{today}.tar.gz'
 # Full path for backup file
 backup_path = f'{backup_dir}/{backup_file}'
 
-
-cmd_mount = ['sudo', '-S', 'mount', '-U', '01DB2557286B1350', '/mnt/store', '-o', 'uid=1000,gid=1000']
-cmd_arch = [
-    'tar',
-   '-czvf', backup_path,
-    '-g', f'{backup_dir}/usb.snar',
-    '-X', f'{backup_dir}/.backupignore',
-    source_path
-]
+cmd_mount = ['sudo', '-S', 'mount', '-U', '01DB2557286B1350',
+             '/mnt/store', '-o', 'uid=1000,gid=1000']
+cmd_arch = ['tar', '-czvf', backup_path, '-g', f'{backup_dir}/usb.snar',
+            '-X', f'{backup_dir}/.backupignore', source_path]
 
 # Mount if there is no mounting path
 if not os.path.ismount(mount_point):
@@ -80,8 +75,9 @@ else:
         # Error - rollback 'usb.snap.save'
         shutil.move(f'{backup_dir}/usb.snar.save', f'{backup_dir}/usb.snar')
         # Error - remove bad archive
-        os.remove(backup_path)        
+        os.remove(backup_path)
         raise SystemExit(3)
     else:
         logger.info('Create arhive success')
-        os.remove(f'{backup_dir}/usb.snar.save') # Success - remove 'usb.snap.save'
+        # Success - remove 'usb.snap.save'
+        os.remove(f'{backup_dir}/usb.snar.save')
